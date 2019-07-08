@@ -1,6 +1,14 @@
 language: generic
 dist: xenial
 sudo: required
+env:
+  matrix:
+    - TARGET=xenial_x64
+    - TARGET=xenial_arm64
+    - TARGET=xenial_armhf
+    - TARGET=bionic_x64
+    - TARGET=bionic_arm64
+    - TARGET=bionic_armhf
 addons:
   apt:
     update: true
@@ -8,21 +16,22 @@ addons:
     - qemu-user-static
     - binfmt-support
 services:
-- docker
+  - docker
 install:
-# To use the qemu-arm-static in the docker container, host kernel should
-# enable the foreign architecture.
-- echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
-- sudo service docker restart
-- update-binfmts --display
-- docker system info
+  # To use the qemu-arm-static in the docker container, host kernel should
+  # enable the foreign architecture.
+  - sudo apt update
+  - sudo apt install -y qemu-user-static binfmt-support
+  - update-binfmts --display
+  - docker system info
+
 script:
-- docker build --squash -t nugulinux/buildenv .
+  - ./build.sh $TARGET
 before_deploy:
   - docker images
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 deploy:
   provider: script
-  script: docker push nugulinux/buildenv
+  script: docker push nugulinux/buildenv:$TARGET
   on:
     all_branches: true
