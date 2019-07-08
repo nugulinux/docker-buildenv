@@ -9,7 +9,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
     LC_ALL=en_US.UTF-8 \
     LANG=$LC_ALL
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && touch /etc/localtime \
+	    && touch /etc/timezone \
+	    && apt-get install -y --no-install-recommends \
 	    apt-utils \
 	    binfmt-support \
 	    build-essential \
