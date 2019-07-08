@@ -48,6 +48,8 @@ USER $USER
 ENV HOME /home/$USER
 WORKDIR /home/$USER
 
+RUN mkdir -p ~/ubuntu/scratch && mkdir -p ~/ubuntu/build && mkdir -p ~/ubuntu/logs && mkdir -p ~/ubuntu/repo && mkdir -p ~/ubuntu/debs
+
 COPY sbuild/.sbuildrc sbuild/.mk-sbuild.rc /home/$USER/
 COPY repo/chup repo/clean.sh repo/localdebs.sh repo/prep.sh repo/scan.sh /home/$USER/ubuntu/repo/
 RUN echo "/home/$USER/ubuntu/scratch    /scratch    none    rw,bind    0    0" | sudo tee -a /etc/schroot/sbuild/fstab \
