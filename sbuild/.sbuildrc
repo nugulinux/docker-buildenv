@@ -1,0 +1,31 @@
+$apt_allow_unauthenticated = 1;
+$environment_filter = [
+	'^PATH$',
+	'^DEB(IAN|SIGN)?_[A-Z_]+$',
+	'^(C(PP|XX)?|LD|F)FLAGS(_APPEND)?$',
+	'^USER(NAME)?$',
+	'^LOGNAME$',
+	'^HOME$',
+	'^TERM$',
+	'^SHELL$',
+	'^no_proxy$',
+	'^http_proxy$',
+	'^https_proxy$',
+	'^ftp_proxy$',
+	'^REST_TEST_SERVER$'
+];
+
+# Directory for writing build logs to
+$log_dir=$ENV{HOME}."/ubuntu/logs";
+
+$external_commands = {
+    "pre-build-commands" => [
+        ['/home/'.$ENV{USER}.'/ubuntu/repo/scan.sh'],
+    ],
+    "chroot-setup-commands" => [
+        ['/repo/prep.sh'],
+    ],
+};
+
+# don't remove this, Perl needs it:
+1;
