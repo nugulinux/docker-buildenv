@@ -21,9 +21,11 @@ RUN apt-get update && touch /etc/localtime \
 	    debhelper \
 	    debootstrap \
 	    devscripts \
+	    fakeroot \
 	    git \
 	    iputils-ping \
 	    language-pack-en \
+	    moreutils \
 	    net-tools \
 	    qemu-user-static \
 	    sbuild \
