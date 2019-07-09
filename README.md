@@ -4,12 +4,40 @@
 
 ## Getting started
 
-### Build debian package for x86_64 Xenial(Ubuntu 16.04)
+### Build a debian package for x86_64 Xenial(Ubuntu 16.04)
 
 ```sh
-$ git clone .../myrepo
-$ docker run -it --rm --privileged -v $PWD:$PWD -w $PWD/myrepo \
+$ git clone {url}/myrepo
+$ docker run -t --rm --privileged -v $PWD:$PWD -w $PWD/myrepo \
     -v /var/lib/schroot/chroots nugulinux/buildenv:xenial_x64 sbuild.sh
+$ ls
+myrepo/
+myrepo_amd64.deb
+```
+
+### Build with additional parameters
+
+You can use the parameters used in the sbuild command in sbuild.sh as well.
+
+```sh
+$ git clone {url}/myrepo
+$ docker run -t --rm --privileged -v $PWD:$PWD -w $PWD/myrepo \
+    -v /var/lib/schroot/chroots nugulinux/buildenv:xenial_x64 \
+    sbuild.sh --extra-repository="deb [trusted=yes] http://ppa.launchpad.net/webispy/grpc/ubuntu xenial main"
+
+$ ls
+myrepo/
+myrepo_amd64.deb
+```
+
+### Build with cross compile
+
+The nugulinux/buildenv already has preconfigured images for arm64 and armhf. So simply specify the desired target in the tag of the docker image.
+
+```sh
+$ git clone {url}/myrepo
+$ docker run -t --rm --privileged -v $PWD:$PWD -w $PWD/myrepo \
+    -v /var/lib/schroot/chroots nugulinux/buildenv:xenial_armhf sbuild.sh
 $ ls
 myrepo/
 myrepo_amd64.deb
