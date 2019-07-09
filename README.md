@@ -6,6 +6,8 @@
 
 ### Build a debian package for x86_64 Xenial(Ubuntu 16.04)
 
+The **nugulinux/buildenv** docker image contains a `sbuild.sh` script that makes it easier the build. The script is a simple `sbuild` wrapper that automatically puts `--chroot`, `--host` and `-j{n}` options for the image.
+
 ```sh
 $ git clone {url}/myrepo
 $ docker run -t --rm --privileged -v $PWD:$PWD -w $PWD/myrepo \
@@ -17,7 +19,7 @@ myrepo_amd64.deb
 
 ### Build with additional parameters
 
-You can use the parameters used in the sbuild command in sbuild.sh as well.
+You can use the parameters used in the `sbuild` command in `sbuild.sh` as well.
 
 ```sh
 $ git clone {url}/myrepo
@@ -32,7 +34,7 @@ myrepo_amd64.deb
 
 ### Build with cross compile
 
-The nugulinux/buildenv already has preconfigured images for arm64 and armhf. So simply specify the desired target in the tag of the docker image.
+The **nugulinux/buildenv** already has preconfigured images for **arm64** and **armhf**. So simply specify the desired target in the tag of the docker image.
 
 ```sh
 $ git clone {url}/myrepo
