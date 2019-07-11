@@ -34,6 +34,7 @@ RUN apt-get update && touch /etc/localtime \
 	    sudo \
 	    ubuntu-dev-tools \
 	    unzip \
+	    vim \
 	    wget \
 	    xz-utils \
 	    && apt-get clean \
