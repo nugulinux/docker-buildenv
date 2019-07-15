@@ -17,12 +17,12 @@ install:
 - update-binfmts --display
 - docker system info
 script:
-- docker build --squash -t nugulinux/buildenv .
+  - docker build --squash -t nugulinux/buildenv:base_wip .
 before_deploy:
   - docker images
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 deploy:
   provider: script
-  script: docker push nugulinux/buildenv
+  script: docker push nugulinux/buildenv:base_wip
   on:
     all_branches: true

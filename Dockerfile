@@ -14,6 +14,7 @@ RUN apt-get update && touch /etc/localtime \
 	    && apt-get install -y --no-install-recommends \
 	    apt-utils \
 	    binfmt-support \
+	    bindfs \
 	    build-essential \
 	    ca-certificates \
 	    curl \
@@ -51,19 +52,19 @@ USER $USER
 ENV HOME /home/$USER
 WORKDIR /home/$USER
 
-RUN mkdir -p ~/ubuntu/scratch && mkdir -p ~/ubuntu/build && mkdir -p ~/ubuntu/logs && mkdir -p ~/ubuntu/repo && mkdir -p ~/ubuntu/debs
+#RUN mkdir -p ~/ubuntu/scratch && mkdir -p ~/ubuntu/build && mkdir -p ~/ubuntu/logs && mkdir -p ~/ubuntu/repo && mkdir -p ~/ubuntu/debs
 
-COPY sbuild/.sbuildrc sbuild/.mk-sbuild.rc /home/$USER/
-COPY repo/chup repo/clean.sh repo/localdebs.sh repo/prep.sh repo/scan.sh /home/$USER/ubuntu/repo/
-RUN echo "/home/$USER/ubuntu/scratch    /scratch    none    rw,bind    0    0" | sudo tee -a /etc/schroot/sbuild/fstab \
-		&& echo "/home/$USER/ubuntu/repo    /repo   none    rw,bind    0    0" | sudo tee -a /etc/schroot/sbuild/fstab \
-		&& sudo chown $USER.$USER .sbuildrc && sudo chown $USER.$USER .mk-sbuild.rc \
-		&& sudo chown $USER.$USER ~/ubuntu/repo/* \
-		&& chmod 755 ~/ubuntu/repo/*.sh ~/ubuntu/repo/chup
+#COPY sbuild/.sbuildrc sbuild/.mk-sbuild.rc /home/$USER/
+#COPY repo/chup repo/clean.sh repo/localdebs.sh repo/prep.sh repo/scan.sh /home/$USER/ubuntu/repo/
+#RUN echo "/home/$USER/ubuntu/scratch    /scratch    none    rw,bind    0    0" | sudo tee -a /etc/schroot/sbuild/fstab \
+#		&& echo "/home/$USER/ubuntu/repo    /repo   none    rw,bind    0    0" | sudo tee -a /etc/schroot/sbuild/fstab \
+#		&& sudo chown $USER.$USER .sbuildrc && sudo chown $USER.$USER .mk-sbuild.rc \
+#		&& sudo chown $USER.$USER ~/ubuntu/repo/* \
+#		&& chmod 755 ~/ubuntu/repo/*.sh ~/ubuntu/repo/chup
 
 # sbuild tmpfs setup to speed-up
-COPY sbuild/04tmpfs /etc/schroot/setup.d/
-RUN sudo chmod 755 /etc/schroot/setup.d/04tmpfs \
-		&& echo "none /var/lib/schroot/union/overlay tmpfs uid=root,gid=root,mode=0750 0 0" | sudo tee -a /etc/fstab
+#COPY sbuild/04tmpfs /etc/schroot/setup.d/
+#RUN sudo chmod 755 /etc/schroot/setup.d/04tmpfs \
+#		&& echo "none /var/lib/schroot/union/overlay tmpfs uid=root,gid=root,mode=0750 0 0" | sudo tee -a /etc/fstab
 
 CMD ["/bin/bash"]
