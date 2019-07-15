@@ -6,66 +6,30 @@ if [ "$#" -ne 1 ]; then
 	exit 1
 fi
 
-docker pull nugulinux/buildenv
+docker pull nugulinux/buildenv:base_wip
 
 # The "--privileged" option is required because we should run the
 # "mount --bind" command inside the container.
-docker create -it --privileged --name $1 nugulinux/buildenv
+docker create -it --privileged --name $1 nugulinux/buildenv:base_wip
 
 docker start $1
 case "$1" in
-	"xenial_x64")
+	"test")
 		CHROOT=xenial-amd64
 		HOST=amd64
 		DIST=xenial
 		CROSS=0
 		;;
 
-	"xenial_arm64")
-		CHROOT=xenial-amd64-arm64
-		HOST=arm64
-		DIST=xenial
-		CROSS=1
-		;;
-
-	"xenial_armhf")
-		CHROOT=xenial-amd64-armhf
-		HOST=armhf
-		DIST=xenial
-		CROSS=1
-		;;
-
-	"bionic_x64")
-		CHROOT=bionic-amd64
-		HOST=amd64
-		DIST=bionic
-		CROSS=0
-		;;
-
-	"bionic_arm64")
-		CHROOT=bionic-amd64-arm64
-		HOST=arm64
-		DIST=bionic
-		CROSS=1
-		;;
-
-	"bionic_armhf")
-		CHROOT=bionic-amd64-armhf
-		HOST=armhf
-		DIST=bionic
-		CROSS=1
-		;;
-
 	*)
 		exit 1
 esac
 
-if [ "$CROSS" -eq 1 ]
-then
-	docker exec -t $1 bash -c "mk-sbuild --target $HOST $DIST && sudo sed -i 's/^union-type=.*/union-type=overlay/' /etc/schroot/chroot.d/sbuild-$CHROOT && sbuild-update $CHROOT && sbuild-upgrade $CHROOT && sudo cp /usr/bin/qemu-a*-static /var/lib/schroot/chroots/$CHROOT/usr/bin"
-else
-	docker exec -t $1 bash -c "mk-sbuild --arch $HOST $DIST && sudo sed -i 's/^union-type=.*/union-type=overlay/' /etc/schroot/chroot.d/sbuild-$CHROOT && sbuild-update $CHROOT && sbuild-upgrade $CHROOT"
-fi
+#docker exec -t $1 bash -c "sudo rm /etc/schroot/setup.d/04tmpfs"
+#docker exec -t $1 bash -c "sudo rm /etc/fstab && sudo touch /etc/fstab"
+docker exec -t $1 bash -c "mk-sbuild --arch $HOST $DIST"
+#docker exec -t $1 bash -c "sudo sed -i 's/^union-type=.*/union-type=overlay/' /etc/schroot/chroot.d/sbuild-$CHROOT"
+#docker exec -t $1 bash -c "sbuild-update $CHROOT && sbuild-upgrade $CHROOT"
 
 docker stop $1
 

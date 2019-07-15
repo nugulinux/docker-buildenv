@@ -3,12 +3,7 @@ dist: xenial
 sudo: required
 env:
   matrix:
-    - TARGET=xenial_x64
-    - TARGET=xenial_arm64
-    - TARGET=xenial_armhf
-    - TARGET=bionic_x64
-    - TARGET=bionic_arm64
-    - TARGET=bionic_armhf
+    - TARGET=test
 addons:
   apt:
     update: true
