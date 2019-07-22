@@ -58,6 +58,8 @@ COPY repo/chup repo/clean.sh repo/localdebs.sh repo/prep.sh repo/scan.sh /home/$
 RUN echo "/home/$USER/ubuntu/scratch    /scratch    none    rw,bind    0    0" | sudo tee -a /etc/schroot/sbuild/fstab \
 		&& echo "/home/$USER/ubuntu/repo    /repo   none    rw,bind    0    0" | sudo tee -a /etc/schroot/sbuild/fstab \
 		&& echo "/dev/null       /dev/null       none    rw,bind         0       0" | sudo tee -a /etc/schroot/sbuild/fstab \
+		&& echo "/dev/random     /dev/random       none    rw,bind         0       0" | sudo tee -a /etc/schroot/sbuild/fstab \
+		&& echo "/dev/urandom    /dev/urandom      none    rw,bind         0       0" | sudo tee -a /etc/schroot/sbuild/fstab \
 		&& sudo chown $USER.$USER .sbuildrc && sudo chown $USER.$USER .mk-sbuild.rc \
 		&& sudo chown $USER.$USER ~/ubuntu/repo/* \
 		&& chmod 755 ~/ubuntu/repo/*.sh ~/ubuntu/repo/chup
