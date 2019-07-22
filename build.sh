@@ -14,46 +14,32 @@ docker create -it --privileged --name $1 nugulinux/buildenv
 
 docker start $1
 case "$1" in
-	"xenial_x64")
-		CHROOT=xenial-amd64
-		HOST=amd64
+	"xenial_arm64_n")
+		CHROOT=xenial-arm64
+		HOST=arm64
 		DIST=xenial
 		CROSS=0
 		;;
 
-	"xenial_arm64")
-		CHROOT=xenial-amd64-arm64
-		HOST=arm64
-		DIST=xenial
-		CROSS=1
-		;;
-
-	"xenial_armhf")
-		CHROOT=xenial-amd64-armhf
+	"xenial_armhf_n")
+		CHROOT=xenial-armhf
 		HOST=armhf
 		DIST=xenial
-		CROSS=1
+		CROSS=0
 		;;
 
-	"bionic_x64")
-		CHROOT=bionic-amd64
-		HOST=amd64
+	"bionic_arm64_n")
+		CHROOT=bionic-arm64
+		HOST=arm64
 		DIST=bionic
 		CROSS=0
 		;;
 
-	"bionic_arm64")
-		CHROOT=bionic-amd64-arm64
-		HOST=arm64
-		DIST=bionic
-		CROSS=1
-		;;
-
-	"bionic_armhf")
-		CHROOT=bionic-amd64-armhf
+	"bionic_armhf_n")
+		CHROOT=bionic-armhf
 		HOST=armhf
 		DIST=bionic
-		CROSS=1
+		CROSS=0
 		;;
 
 	*)
