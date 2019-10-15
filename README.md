@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/nugulinux/docker-buildenv.svg?branch=master)](https://travis-ci.org/nugulinux/docker-buildenv) [![Docker Pulls](https://img.shields.io/docker/pulls/nugulinux/buildenv.svg)](https://hub.docker.com/r/nugulinux/buildenv/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/nugulinux/buildenv.svg)](https://hub.docker.com/r/nugulinux/buildenv/)
 
 # Docker images for Ubuntu sbuild
 
@@ -25,7 +25,7 @@ You can use the parameters used in the `sbuild` command in `sbuild.sh` as well.
 $ git clone {url}/myrepo
 $ docker run -t --rm --privileged -v $PWD:$PWD -w $PWD/myrepo \
     -v /var/lib/schroot/chroots nugulinux/buildenv:xenial_x64 \
-    sbuild.sh --extra-repository="deb [trusted=yes] http://ppa.launchpad.net/webispy/grpc/ubuntu xenial main"
+    sbuild.sh --extra-repository="deb [trusted=yes] http://ppa.launchpad.net/nugulinux/sdk/ubuntu xenial main"
 
 $ ls
 myrepo/
