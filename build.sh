@@ -77,6 +77,7 @@ echo "export TAG=$1" >> buildinfo
 
 docker cp buildinfo $1:/etc/
 docker cp sbuild.sh $1:/usr/bin/
+docker cp sdkbuild.sh $1:/usr/bin/
 
 # Create a docker image using container
 docker commit $1 nugulinux/buildenv:$1
