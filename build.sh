@@ -67,6 +67,9 @@ else
 	docker exec -t $1 bash -c "mk-sbuild --arch $HOST $DIST && sudo sed -i 's/^union-type=.*/union-type=overlay/' /etc/schroot/chroot.d/sbuild-$CHROOT && sbuild-update $CHROOT && sbuild-upgrade $CHROOT"
 fi
 
+# Install essential packages
+docker exec -t $1 sudo bash -c "cd / && schroot -c source:$CHROOT -u root -- apt-get install -y apt-transport-https ca-certificates"
+
 docker stop $1
 
 echo "export CHROOT=$CHROOT" > buildinfo
