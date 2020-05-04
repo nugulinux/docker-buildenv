@@ -6,71 +6,36 @@ if [ "$#" -ne 1 ]; then
 	exit 1
 fi
 
+CNAME=$1
+
 docker pull nugulinux/buildenv
 
 # The "--privileged" option is required because we should run the
 # "mount --bind" command inside the container.
-docker create -it --privileged --name $1 nugulinux/buildenv
+docker create -it --privileged --name $CNAME nugulinux/buildenv
 
-docker start $1
-case "$1" in
-	"xenial_x64")
-		CHROOT=xenial-amd64
-		HOST=amd64
-		DIST=xenial
-		CROSS=0
-		;;
+docker start $CNAME
 
-	"xenial_arm64")
-		CHROOT=xenial-amd64-arm64
-		HOST=arm64
-		DIST=xenial
-		CROSS=1
-		;;
+CHROOT=buster-rpi-armhf
+HOST=armhf
+DIST=buster-rpi
+CROSS=0
 
-	"xenial_armhf")
-		CHROOT=xenial-amd64-armhf
-		HOST=armhf
-		DIST=xenial
-		CROSS=1
-		;;
+docker cp sbuild/rpi.sources $CNAME:/home/work
+docker cp sbuild/.mk-sbuild.rc $CNAME:/home/work
 
-	"bionic_x64")
-		CHROOT=bionic-amd64
-		HOST=amd64
-		DIST=bionic
-		CROSS=0
-		;;
+docker exec -t $CNAME bash -c "curl -sL http://archive.raspbian.org/raspbian.public.key | gpg --import -"
+docker exec -t $CNAME bash -c "gpg --export 9165938D90FDDD2E > /home/work/raspbian-archive-keyring.gpg"
 
-	"bionic_arm64")
-		CHROOT=bionic-amd64-arm64
-		HOST=arm64
-		DIST=bionic
-		CROSS=1
-		;;
-
-	"bionic_armhf")
-		CHROOT=bionic-amd64-armhf
-		HOST=armhf
-		DIST=bionic
-		CROSS=1
-		;;
-
-	*)
-		exit 1
-esac
-
-if [ "$CROSS" -eq 1 ]
-then
-	docker exec -t $1 bash -c "mk-sbuild --target $HOST $DIST && sudo sed -i 's/^union-type=.*/union-type=overlay/' /etc/schroot/chroot.d/sbuild-$CHROOT && sbuild-update $CHROOT && sbuild-upgrade $CHROOT && sudo cp /usr/bin/qemu-a*-static /var/lib/schroot/chroots/$CHROOT/usr/bin"
-else
-	docker exec -t $1 bash -c "mk-sbuild --arch $HOST $DIST && sudo sed -i 's/^union-type=.*/union-type=overlay/' /etc/schroot/chroot.d/sbuild-$CHROOT && sbuild-update $CHROOT && sbuild-upgrade $CHROOT"
-fi
+docker exec -t $CNAME bash -c "mk-sbuild --arch $HOST --name $DIST --debootstrap-mirror=http://archive.raspbian.org/raspbian/ buster && sudo sed -i 's/^union-type=.*/union-type=overlay/' /etc/schroot/chroot.d/sbuild-$CHROOT && sbuild-update $CHROOT && sbuild-upgrade $CHROOT"
 
 # Install essential packages
-docker exec -t $1 sudo bash -c "cd / && schroot -c source:$CHROOT -u root -- apt-get install -y apt-transport-https ca-certificates"
+docker exec -t $CNAME sudo bash -c "cd / && schroot -c source:$CHROOT -u root -- apt-get install -y apt-transport-https ca-certificates"
 
-docker stop $1
+# Install sdk dependency packages (raspbian apt is too slow)
+docker exec -t $CNAME sudo bash -c "cd / && schroot -c source:$CHROOT -u root -- apt-get install -y cmake pkg-config git-core libglib2.0-dev libcurl4-openssl-dev libopus-dev portaudio19-dev libssl-dev libasound2-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev"
+
+docker stop $CNAME
 
 echo "export CHROOT=$CHROOT" > buildinfo
 echo "export HOST=$HOST" >> buildinfo
@@ -78,13 +43,15 @@ echo "export DIST=$DIST" >> buildinfo
 echo "export CROSS=$CROSS" >> buildinfo
 echo "export TAG=$1" >> buildinfo
 
-docker cp buildinfo $1:/etc/
-docker cp sbuild.sh $1:/usr/bin/
-docker cp sdkbuild.sh $1:/usr/bin/
+docker cp buildinfo $CNAME:/etc/
+docker cp sbuild.sh $CNAME:/usr/bin/
+docker cp sdkbuild.sh $CNAME:/usr/bin/
 
 # Create a docker image using container
-docker commit $1 nugulinux/buildenv:$1
+docker commit $CNAME nugulinux/buildenv:$CNAME
 
 # Remove container
-docker rm $1
+docker rm $CNAME
+
+rm buildinfo
 

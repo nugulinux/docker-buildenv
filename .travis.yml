@@ -1,14 +1,6 @@
 language: generic
 dist: xenial
 sudo: required
-env:
-  matrix:
-    - TARGET=xenial_x64
-    - TARGET=xenial_arm64
-    - TARGET=xenial_armhf
-    - TARGET=bionic_x64
-    - TARGET=bionic_arm64
-    - TARGET=bionic_armhf
 addons:
   apt:
     update: true
@@ -26,12 +18,12 @@ install:
   - docker system info
 
 script:
-  - ./build.sh $TARGET
+  - ./build.sh buster_rpi
 before_deploy:
   - docker images
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 deploy:
   provider: script
-  script: docker push nugulinux/buildenv:$TARGET
+  script: docker push nugulinux/buildenv:buster_rpi
   on:
     all_branches: true

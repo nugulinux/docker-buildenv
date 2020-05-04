@@ -29,4 +29,4 @@ if [ ! -z "$DIRECT" ]; then
 	echo $RESULT
 fi
 
-sbuild --chroot $CHROOT --host $HOST -j$JOBS --dpkg-source-opt="-I.git" "$@"
+sbuild --chroot $CHROOT --host $HOST --arch $HOST -j$JOBS --dpkg-source-opt="-I.git" "$@"

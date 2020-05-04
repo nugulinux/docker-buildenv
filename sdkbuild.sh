@@ -34,7 +34,10 @@ else
 	fi
 fi
 
-EXTRAREPO="--extra-repository=\"deb [trusted=yes] http://ppa.launchpad.net/nugulinux/sdk/ubuntu $DIST main\""
-BUILDCMD="sbuild.sh -- $EXTRAREPO"
+# PPA not support
+#EXTRAREPO="--extra-repository=\"deb [trusted=yes] http://ppa.launchpad.net/nugulinux/sdk/ubuntu $DIST main\""
+#BUILDCMD="sbuild.sh -- $EXTRAREPO"
+
+BUILDCMD="sbuild.sh"
 echo $BUILDCMD
 eval $BUILDCMD
