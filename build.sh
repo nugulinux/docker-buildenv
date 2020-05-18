@@ -33,7 +33,11 @@ docker exec -t $CNAME bash -c "mk-sbuild --arch $HOST --name $DIST --debootstrap
 docker exec -t $CNAME sudo bash -c "cd / && schroot -c source:$CHROOT -u root -- apt-get install -y apt-transport-https ca-certificates"
 
 # Install sdk dependency packages (raspbian apt is too slow)
-docker exec -t $CNAME sudo bash -c "cd / && schroot -c source:$CHROOT -u root -- apt-get install -y cmake pkg-config git-core libglib2.0-dev libcurl4-openssl-dev libopus-dev portaudio19-dev libssl-dev libasound2-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev"
+docker exec -t $CNAME sudo bash -c "cd / && schroot -c source:$CHROOT -u root -- apt-get install -y cmake pkg-config git-core libglib2.0-dev libcurl4-openssl-dev libopus-dev portaudio19-dev libssl-dev libasound2-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libncursesw5-dev"
+
+# Remove apt cache
+docker exec -t $CNAME sudo bash -c "cd / && schroot -c source:$CHROOT -u root -- apt-get clean"
+docker exec -t $CNAME sudo bash -c "cd / && schroot -c source:$CHROOT -u root -- rm -rf /var/cache/apt/lists/*"
 
 docker stop $CNAME
 
