@@ -1,0 +1,20 @@
+name: Docker publish - buster_rpi
+
+on:
+  push:
+
+env:
+  IMAGE_NAME: nugulinux/buildenv:buster_rpi
+
+jobs:
+  build:
+    runs-on: [ self-hosted, Linux, X64 ]
+    steps:
+    - name: Check out the repo
+      uses: actions/checkout@v2
+    - name: Build image
+      run: ./build.sh buster_rpi
+    - name: Docker login
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+    - name: Publish
+      run: docker push $IMAGE_NAME
