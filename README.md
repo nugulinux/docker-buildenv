@@ -49,12 +49,16 @@ myrepo_amd64.deb
 
 ### Base image
 
+[![Build Status](https://github.com/nugulinux/docker-buildenv/workflows/Docker%20publish%20-%20base/badge.svg)](https://github.com/nugulinux/docker-buildenv/actions?query=workflow%3A%22Docker+publish+-+base%22)
+
 You can create your own sbuild image using `mk-sbuild` tool and base image.
 
 - Branch: [base](https://github.com/nugulinux/docker-buildenv/tree/base)
-- Docker image: [nugulinux/buildenv]()
+- Docker image: `nugulinux/buildenv`
 
 ### Cross-compile images
+
+[![Build Status](https://github.com/nugulinux/docker-buildenv/workflows/Docker%20publish%20-%20rootfs/badge.svg)](https://github.com/nugulinux/docker-buildenv/actions?query=workflow%3A%22Docker+publish+-+rootfs%22)
 
 Pre-configured images for sbuild.
 
