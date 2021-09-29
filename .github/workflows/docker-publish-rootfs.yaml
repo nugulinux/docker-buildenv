@@ -8,17 +8,32 @@ env:
 
 jobs:
   build:
-    runs-on: [ self-hosted, Linux, X64 ]
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
-        target: [xenial_x64, xenial_arm64, xenial_armhf, bionic_x64, bionic_arm64, bionic_armhf]
+        target:
+          [
+            xenial_x64,
+            xenial_arm64,
+            xenial_armhf,
+            bionic_x64,
+            bionic_arm64,
+            bionic_armhf,
+            focal_x64,
+            focal_arm64,
+            focal_armhf,
+          ]
     steps:
-    - name: Check out the repo
-      uses: actions/checkout@v2
-    - name: Build image
-      run: ./build.sh ${{ matrix.target }}
-    - name: Docker login
-      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-    - name: Publish
-      run: docker push $IMAGE_NAME:${{ matrix.target }}
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Enable experimental feature
+        run: |
+          echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
+          sudo service docker restart
+      - name: Build image
+        run: ./build.sh ${{ matrix.target }}
+      - name: Docker login
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Publish
+        run: docker push $IMAGE_NAME:${{ matrix.target }}

@@ -56,6 +56,27 @@ case "$1" in
 		CROSS=1
 		;;
 
+	"focal_x64")
+		CHROOT=focal-amd64
+		HOST=amd64
+		DIST=focal
+		CROSS=0
+		;;
+
+	"focal_arm64")
+		CHROOT=focal-amd64-arm64
+		HOST=arm64
+		DIST=focal
+		CROSS=1
+		;;
+
+	"focal_armhf")
+		CHROOT=focal-amd64-armhf
+		HOST=armhf
+		DIST=focal
+		CROSS=1
+		;;
+
 	*)
 		exit 1
 esac
