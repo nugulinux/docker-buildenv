@@ -1,5 +1,5 @@
 
-FROM ubuntu:bionic
+FROM ubuntu:jammy
 LABEL maintainer="webispy@gmail.com" \
       version="0.1" \
       description="build environment for nugulinux"
@@ -38,7 +38,8 @@ RUN apt-get update && touch /etc/localtime \
 	    wget \
 	    xz-utils \
 	    && apt-get clean \
-	    && rm -rf /var/lib/apt/lists/*
+	    && rm -rf /var/lib/apt/lists/* \
+	    && touch /etc/timezone
 
 RUN useradd -ms /bin/bash $USER \
 		&& echo "$USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USER \
