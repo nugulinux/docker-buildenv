@@ -77,6 +77,27 @@ case "$1" in
 		CROSS=1
 		;;
 
+	"jammy_x64")
+		CHROOT=jammy-amd64
+		HOST=amd64
+		DIST=jammy
+		CROSS=0
+		;;
+
+	"jammy_arm64")
+		CHROOT=jammy-amd64-arm64
+		HOST=arm64
+		DIST=jammy
+		CROSS=1
+		;;
+
+	"jammy_armhf")
+		CHROOT=jammy-amd64-armhf
+		HOST=armhf
+		DIST=jammy
+		CROSS=1
+		;;
+
 	*)
 		exit 1
 esac
