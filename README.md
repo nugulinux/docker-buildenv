@@ -4,14 +4,14 @@
 
 ## Getting started
 
-### Build a debian package for x86_64 Xenial(Ubuntu 16.04)
+### Build a debian package for x86_64 bionic(Ubuntu 18.04)
 
 The **nugulinux/buildenv** docker image contains a `sbuild.sh` script that makes it easier the build. The script is a simple `sbuild` wrapper that automatically puts `--chroot`, `--host` and `-j{n}` options for the image.
 
 ```sh
 $ git clone {url}/myrepo
 $ docker run -t --rm --privileged -v $PWD:$PWD -w $PWD/myrepo \
-    -v /var/lib/schroot/chroots nugulinux/buildenv:xenial_x64 sbuild.sh
+    -v /var/lib/schroot/chroots nugulinux/buildenv:bionic_x64 sbuild.sh
 $ ls
 myrepo/
 myrepo_amd64.deb
@@ -24,8 +24,8 @@ You can use the parameters used in the `sbuild` command in `sbuild.sh` as well.
 ```sh
 $ git clone {url}/myrepo
 $ docker run -t --rm --privileged -v $PWD:$PWD -w $PWD/myrepo \
-    -v /var/lib/schroot/chroots nugulinux/buildenv:xenial_x64 \
-    sbuild.sh --extra-repository="deb [trusted=yes] http://ppa.launchpad.net/nugulinux/sdk/ubuntu xenial main"
+    -v /var/lib/schroot/chroots nugulinux/buildenv:bionic_x64 \
+    sbuild.sh --extra-repository="deb [trusted=yes] http://ppa.launchpad.net/nugulinux/sdk/ubuntu bionic main"
 
 $ ls
 myrepo/
@@ -39,7 +39,7 @@ The **nugulinux/buildenv** already has preconfigured images for **arm64** and **
 ```sh
 $ git clone {url}/myrepo
 $ docker run -t --rm --privileged -v $PWD:$PWD -w $PWD/myrepo \
-    -v /var/lib/schroot/chroots nugulinux/buildenv:xenial_armhf sbuild.sh
+    -v /var/lib/schroot/chroots nugulinux/buildenv:bionic_armhf sbuild.sh
 $ ls
 myrepo/
 myrepo_amd64.deb
@@ -70,3 +70,9 @@ Pre-configured images for sbuild.
   - `nugulinux/buildenv:bionic_x64`
   - `nugulinux/buildenv:bionic_arm64`
   - `nugulinux/buildenv:bionic_armhf`
+  - `nugulinux/buildenv:focal_x64`
+  - `nugulinux/buildenv:focal_arm64`
+  - `nugulinux/buildenv:focal_armhf`
+  - `nugulinux/buildenv:jammy_x64`
+  - `nugulinux/buildenv:jammy_arm64`
+  - `nugulinux/buildenv:jammy_armhf`
