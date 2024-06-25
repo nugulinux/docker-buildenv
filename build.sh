@@ -98,6 +98,29 @@ case "$1" in
 		CROSS=1
 		;;
 
+	"noble_x64")
+		CHROOT=noble-amd64
+		HOST=amd64
+		DIST=noble
+		CROSS=0
+		;;
+
+	"noble_arm64")
+		CHROOT=noble-amd64-arm64
+		HOST=arm64
+		DIST=noble
+		QEMU=qemu-aarch64
+		CROSS=1
+		;;
+
+	"noble_armhf")
+		CHROOT=noble-amd64-armhf
+		HOST=armhf
+		DIST=noble
+		QEMU=qemu-armhf
+		CROSS=1
+		;;
+
 	*)
 		exit 1
 esac
@@ -107,6 +130,10 @@ then
 	docker exec -t $1 bash -c "mk-sbuild --target $HOST $DIST && sudo sed -i 's/^union-type=.*/union-type=overlay/' /etc/schroot/chroot.d/sbuild-$CHROOT && sbuild-update $CHROOT && sbuild-upgrade $CHROOT && sudo cp /usr/bin/qemu-a*-static /var/lib/schroot/chroots/$CHROOT/usr/bin"
 else
 	docker exec -t $1 bash -c "mk-sbuild --arch $HOST $DIST && sudo sed -i 's/^union-type=.*/union-type=overlay/' /etc/schroot/chroot.d/sbuild-$CHROOT && sbuild-update $CHROOT && sbuild-upgrade $CHROOT"
+fi
+
+if [ -n "${QEMU+x}" ] && [ "$CROSS" -eq 1 ]; then
+	docker exec -t $1 bash -c "update-binfmts --enable $QEMU"
 fi
 
 # Install essential packages
