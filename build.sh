@@ -127,17 +127,19 @@ esac
 
 if [ "$CROSS" -eq 1 ]
 then
-	docker exec -t $1 bash -c "mk-sbuild --target $HOST $DIST && sudo sed -i 's/^union-type=.*/union-type=overlay/' /etc/schroot/chroot.d/sbuild-$CHROOT && sbuild-update $CHROOT && sbuild-upgrade $CHROOT && sudo cp /usr/bin/qemu-a*-static /var/lib/schroot/chroots/$CHROOT/usr/bin"
+	docker exec -t $1 bash -c "mk-sbuild --arch amd64 --target $HOST $DIST && sudo sed -i 's/^union-type=.*/union-type=overlay/' /etc/schroot/chroot.d/sbuild-$CHROOT && sbuild-update $CHROOT && sbuild-upgrade $CHROOT && sudo cp /usr/bin/qemu-a*-static /var/lib/schroot/chroots/$CHROOT/usr/bin"
 else
 	docker exec -t $1 bash -c "mk-sbuild --arch $HOST $DIST && sudo sed -i 's/^union-type=.*/union-type=overlay/' /etc/schroot/chroot.d/sbuild-$CHROOT && sbuild-update $CHROOT && sbuild-upgrade $CHROOT"
 fi
 
-if [ -n "${QEMU+x}" ] && [ "$CROSS" -eq 1 ]; then
-	docker exec -t $1 bash -c "update-binfmts --enable $QEMU"
-fi
-
 # Install essential packages
 docker exec -t $1 sudo bash -c "cd / && schroot -c source:$CHROOT -u root -- apt-get install -y apt-transport-https ca-certificates"
+
+if [ -n "${QEMU+x}" ] && [ "$CROSS" -eq 1 ]; then
+	docker exec -t $1 sudo bash -c "cd / && schroot -c source:$CHROOT -u root -- apt-get install -y qemu-user-static binfmt-support"
+	docker exec -t $1 sudo bash -c "cd / && schroot -c source:$CHROOT -u root -- update-binfmts --enable $QEMU"
+fi
+
 
 docker stop $1
 
